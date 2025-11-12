@@ -22,42 +22,41 @@ const About = () => {
           {about.profileImage && (
             <img src={about.profileImage} alt={about.name} className="profile-image" />
           )}
-          <div className="profile-text">
-            <h1 className="page-title">{about.name}</h1>
-            {about.currentRole && <p className="current-role">{about.currentRole}</p>}
-            {about.tagline && <p className="tagline">{about.tagline}</p>}
+          <div className="profile-content">
+            {/* <h1 className="page-title">{about.name}</h1> */}
+            {about.currentRole && <h3 className="current-role">{about.currentRole}</h3>}
+
+            <div className="contact-header">
+              {about.location && <p className="location">📍 {about.location}</p>}
+              {about.phone && (
+                <a href={`tel:${about.phone}`} className="contact-link">
+                  ☎ {about.phone}
+                </a>
+              )}
+              {about.email && (
+                <a href={`mailto:${about.email}`} className="contact-link">
+                  ✉ {about.email}
+                </a>
+              )}
+              {about.resumeFile && (
+                <a href={about.resumeFile} className="contact-link" target="_blank" rel="noopener noreferrer">
+                  📥 Resume
+                </a>
+              )}
+              {about.socialLinks && about.socialLinks.length > 0 && (
+                <div className="social-links">
+                  {about.socialLinks.map((link, idx) => (
+                    <a key={idx} href={link.url} className="social-link" target="_blank" rel="noopener noreferrer">
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="contact-header">
-          {about.location && <p className="location">📍 {about.location}</p>}
-          <div className="contact-links">
-            {about.phone && (
-              <a href={`tel:${about.phone}`} className="contact-link">
-                ☎️ {about.phone}
-              </a>
-            )}
-            {about.email && (
-              <a href={`mailto:${about.email}`} className="contact-link">
-                ✉️ {about.email}
-              </a>
-            )}
-            {about.resumeFile && (
-              <a href={about.resumeFile} className="contact-link" target="_blank" rel="noopener noreferrer">
-                📄 Resume
-              </a>
-            )}
-            {about.socialLinks && about.socialLinks.length > 0 && (
-              <div className="social-links">
-                {about.socialLinks.map((link, idx) => (
-                  <a key={idx} href={link.url} className="social-link" target="_blank" rel="noopener noreferrer">
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        {about.tagline && <p className="tagline">{about.tagline}</p>}
       </header>
 
       {about.bio && (
@@ -131,10 +130,12 @@ const About = () => {
                     <img src={job.companyLogo} alt={job.company} className="company-logo" />
                   )}
                   <div className="job-content">
-                    <h3 className="job-title">{job.role}</h3>
+                    <div className="job-header-row">
+                      <h3 className="job-title">{job.role}</h3>
+                      {job.employmentType && <span className="employment-type">{job.employmentType}</span>}
+                    </div>
                     <div className="job-meta">
                       <span className="company">{job.company}</span>
-                      {job.employmentType && <span className="employment-type">{job.employmentType}</span>}
                       {job.location && <span className="location">{job.location}</span>}
                     </div>
                     <span className="period">{job.period}</span>
@@ -251,21 +252,9 @@ const About = () => {
             {Object.entries(skills).map(([category, skillList]) => (
               <div key={category} className="skill-category">
                 <h3 className="skill-category-title">{category}</h3>
-                <div className="skill-items">
-                  {skillList.map((skill, skillIndex) => (
-                    <div key={skillIndex} className="skill-item">
-                      <span className="skill-name">{skill.name}</span>
-                      {skill.proficiencyLevel && (
-                        <span className={`proficiency-badge proficiency-${skill.proficiencyLevel.toLowerCase()}`}>
-                          {skill.proficiencyLevel}
-                        </span>
-                      )}
-                      {skill.yearsOfExperience > 0 && (
-                        <span className="years-badge">{skill.yearsOfExperience}y</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                <p className="skill-list-text">
+                  {skillList.map((skill) => skill.name).join(', ')}
+                </p>
               </div>
             ))}
           </div>
