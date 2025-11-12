@@ -139,6 +139,42 @@ export const convertNodeToHTML = (node) => {
 };
 
 /**
+ * Convert Squidex asset ID to asset URL
+ * @param {String|Array} assetData - Asset ID or array containing asset ID
+ * @returns {String|null} Asset URL or null
+ */
+const convertAssetToUrl = (assetData) => {
+  if (!assetData) return null;
+
+  // Handle array of assets (Squidex returns arrays for asset fields)
+  if (Array.isArray(assetData)) {
+    if (assetData.length === 0) return null;
+    assetData = assetData[0]; // Get first asset
+  }
+
+  // If it's already a URL, return it
+  if (typeof assetData === 'string' && assetData.startsWith('http')) {
+    return assetData;
+  }
+
+  // If it's an object with ID property
+  if (typeof assetData === 'object' && assetData?.id) {
+    const SQUIDEX_URL = import.meta.env.VITE_SQUIDEX_URL || 'https://squidex.thepk.in';
+    const SQUIDEX_APP_NAME = 'platform';
+    return `${SQUIDEX_URL}/api/assets/${SQUIDEX_APP_NAME}/${assetData.id}`;
+  }
+
+  // If it's just an asset ID string
+  if (typeof assetData === 'string') {
+    const SQUIDEX_URL = import.meta.env.VITE_SQUIDEX_URL || 'https://squidex.thepk.in';
+    const SQUIDEX_APP_NAME = 'platform';
+    return `${SQUIDEX_URL}/api/assets/${SQUIDEX_APP_NAME}/${assetData}`;
+  }
+
+  return null;
+};
+
+/**
  * Process article data from Squidex API to standard format
  * @param {Object} rawArticle - Raw article from API
  * @returns {Object} Processed article with converted content
@@ -153,7 +189,7 @@ export const processArticleData = (rawArticle) => {
     publishDate: rawArticle.data?.publishDate?.iv || rawArticle.lastModified || rawArticle.created,
     slug: rawArticle.data?.slug?.iv || '',
     tags: rawArticle.data?.tags?.iv || [],
-    featuredImage: rawArticle.data?.featuredImage?.iv || null,
+    featuredImage: convertAssetToUrl(rawArticle.data?.featuredImage?.iv),
     status: rawArticle.data?.status?.iv || rawArticle.status || 'draft',
     created: rawArticle.created,
     lastModified: rawArticle.lastModified,
