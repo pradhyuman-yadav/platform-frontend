@@ -17,7 +17,7 @@ const LLMChat = () => {
   const [isStreaming, setIsStreaming] = useState(true);
   const messagesEndRef = useRef(null);
 
-  const BACKEND_URL = 'http://127.0.0.1:3002'; // Change to your backend URL
+  const BACKEND_URL = 'api.thepk.in'; // Change to your backend URL
   const API_KEY = 'your-secure-api-key-change-this-in-production';
 
   // Fetch available models on mount
